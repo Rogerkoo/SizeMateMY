@@ -18,9 +18,9 @@ const matchLevelLabels = {
 } as const;
 
 export default function SizeConverter() {
-  const [category, setCategory] = useState<Category>("Shoes");
+  const [category, setCategory] = useState<Category>("Shirts");
   const [audience, setAudience] = useState<SizeAudience>("Adults");
-  const [mySize, setMySize] = useState<string>("UK 10");
+  const [mySize, setMySize] = useState<string>("XS");
   const [customSize, setCustomSize] = useState("");
   const [unit, setUnit] = useState<Unit>("cm");
   const [showSystems, setShowSystems] = useState<Partial<Record<SystemCode, boolean>>>({});

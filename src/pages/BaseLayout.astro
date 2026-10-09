@@ -1,12 +1,16 @@
 ---
 import "../styles/global.css";
+import Analytics from "@vercel/analytics/astro";
+
 const { title = "SizeMY" } = Astro.props;
 ---
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <Analytics />
   </head>
   <body>
     <main class="mx-auto max-w-md px-4 py-6">
