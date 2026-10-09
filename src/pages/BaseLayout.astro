@@ -1,0 +1,20 @@
+---
+import "../styles/global.css";
+const { title = "SizeMY" } = Astro.props;
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main class="mx-auto max-w-md px-4 py-6">
+      <nav aria-label="Main navigation" class="mb-6 flex gap-4 text-sm">
+        <a href="/" class="text-gray-700 underline">Size converter</a>
+        <a href="/fit-guide" class="text-gray-700 underline">Fit guide</a>
+      </nav>
+      <slot />
+    </main>
+  </body>
+</html>

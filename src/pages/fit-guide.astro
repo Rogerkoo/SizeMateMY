@@ -1,0 +1,16 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import FitRecommender from "../components/fit/FitRecommender";
+---
+
+<BaseLayout title="Fit Guide">
+    <h1 class="text-xl font-semibold">Fit guide</h1>
+    <p class="mt-2 text-sm text-gray-600">
+        Optional: tell us your fit preference and tight areas. We’ll suggest a
+        fit style.
+    </p>
+
+    <div class="mt-4">
+        <FitRecommender client:load />
+    </div>
+</BaseLayout>
