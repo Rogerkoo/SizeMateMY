@@ -1,5 +1,6 @@
 export type Category = "Shoes" | "Shirts" | "Pants";
 export type SizeAudience = "Adults" | "Children";
+export type SizeGender = "Men" | "Women";
 export type SystemCode = "MY" | "US" | "UK" | "EU" | "VN" | "JP" | "CN" | "KR";
 export type Fit = "Slim" | "Modern" | "Regular" | "Loose";
 
@@ -10,6 +11,7 @@ export interface MeasurementRange {
 
 export interface SizeChartEntry {
   audience?: SizeAudience;
+  gender?: SizeGender; // adults only; children entries omit it
   system: SystemCode;
   category: Category;
   label: string;

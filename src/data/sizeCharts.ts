@@ -1,187 +1,259 @@
-import type { Category, SizeAudience, SizeChartEntry, SystemCode } from "../library/types";
+import type { Category, SizeChartEntry, SizeGender, SystemCode } from "../library/types";
 
-const malaysiaSizeEntries: SizeChartEntry[] = [
-  // SHIRTS (chest cm)
-  { system: "MY", category: "Shirts", label: "XS", measurements: { chest: { min: 88, max: 92 } } },
-  { system: "MY", category: "Shirts", label: "S", measurements: { chest: { min: 92, max: 96 } } },
-  { system: "MY", category: "Shirts", label: "M", measurements: { chest: { min: 96, max: 100 } } },
-  { system: "MY", category: "Shirts", label: "L", measurements: { chest: { min: 100, max: 106 } } },
-  { system: "MY", category: "Shirts", label: "XL", measurements: { chest: { min: 106, max: 112 } } },
-  { system: "MY", category: "Shirts", label: "2XL", measurements: { chest: { min: 112, max: 118 } } },
-  { system: "MY", category: "Shirts", label: "3XL", measurements: { chest: { min: 118, max: 124 } } },
-  { system: "MY", category: "Shirts", label: "4XL", measurements: { chest: { min: 124, max: 130 } } },
-  { system: "MY", category: "Shirts", label: "5XL", measurements: { chest: { min: 130, max: 136 } } },
+const r1 = (v: number) => Math.round(v * 10) / 10;
+const inch = (n: number) => n * 2.54;
 
-  // PANTS (waist cm)
-  { system: "MY", category: "Pants", label: "W28", measurements: { waist: { min: 71, max: 74 } } },
-  { system: "MY", category: "Pants", label: "W29", measurements: { waist: { min: 73.5, max: 76.5 } } },
-  { system: "MY", category: "Pants", label: "W30", measurements: { waist: { min: 76, max: 79 } } },
-  { system: "MY", category: "Pants", label: "W31", measurements: { waist: { min: 78.5, max: 81.5 } } },
-  { system: "MY", category: "Pants", label: "W32", measurements: { waist: { min: 81, max: 84 } } },
-  { system: "MY", category: "Pants", label: "W33", measurements: { waist: { min: 83.5, max: 86.5 } } },
-  { system: "MY", category: "Pants", label: "W34", measurements: { waist: { min: 86, max: 89 } } },
-  { system: "MY", category: "Pants", label: "W35", measurements: { waist: { min: 88.5, max: 91.5 } } },
-  { system: "MY", category: "Pants", label: "W36", measurements: { waist: { min: 91, max: 94 } } },
-  { system: "MY", category: "Pants", label: "W37", measurements: { waist: { min: 93.5, max: 96.5 } } },
-  { system: "MY", category: "Pants", label: "W38", measurements: { waist: { min: 96, max: 99 } } },
-  { system: "MY", category: "Pants", label: "W39", measurements: { waist: { min: 98.5, max: 101.5 } } },
-  { system: "MY", category: "Pants", label: "W40", measurements: { waist: { min: 101, max: 104 } } },
-  { system: "MY", category: "Pants", label: "W41", measurements: { waist: { min: 103.5, max: 106.5 } } },
-  { system: "MY", category: "Pants", label: "W42", measurements: { waist: { min: 106, max: 109 } } },
-  { system: "MY", category: "Pants", label: "W43", measurements: { waist: { min: 108.5, max: 111.5 } } },
-  { system: "MY", category: "Pants", label: "W44", measurements: { waist: { min: 111, max: 114 } } },
-
-  // SHOES (foot length in cm; half sizes are interpolated between chart sizes)
-  { system: "MY", category: "Shoes", label: "UK 6", measurements: { footLength: { min: 24.5, max: 25.0 } } },
-  { system: "MY", category: "Shoes", label: "UK 6.5", measurements: { footLength: { min: 24.75, max: 25.25 } } },
-  { system: "MY", category: "Shoes", label: "UK 7", measurements: { footLength: { min: 25.0, max: 25.5 } } },
-  { system: "MY", category: "Shoes", label: "UK 7.5", measurements: { footLength: { min: 25.25, max: 25.85 } } },
-  { system: "MY", category: "Shoes", label: "UK 8", measurements: { footLength: { min: 25.5, max: 26.2 } } },
-  { system: "MY", category: "Shoes", label: "UK 8.5", measurements: { footLength: { min: 25.85, max: 26.6 } } },
-  { system: "MY", category: "Shoes", label: "UK 9", measurements: { footLength: { min: 26.2, max: 27.0 } } },
-  { system: "MY", category: "Shoes", label: "UK 9.5", measurements: { footLength: { min: 26.6, max: 27.4 } } },
-  { system: "MY", category: "Shoes", label: "UK 10", measurements: { footLength: { min: 27.0, max: 27.8 } } },
-  { system: "MY", category: "Shoes", label: "UK 10.5", measurements: { footLength: { min: 27.4, max: 28.15 } } },
-  { system: "MY", category: "Shoes", label: "UK 11", measurements: { footLength: { min: 27.8, max: 28.5 } } },
-  { system: "MY", category: "Shoes", label: "UK 11.5", measurements: { footLength: { min: 28.15, max: 28.85 } } },
-  { system: "MY", category: "Shoes", label: "UK 12", measurements: { footLength: { min: 28.5, max: 29.2 } } },
-  { system: "MY", category: "Shoes", label: "UK 12.5", measurements: { footLength: { min: 28.85, max: 29.55 } } },
-  { system: "MY", category: "Shoes", label: "UK 13", measurements: { footLength: { min: 29.2, max: 29.9 } } },
-  { system: "MY", category: "Shoes", label: "UK 13.5", measurements: { footLength: { min: 29.55, max: 30.25 } } },
-  { system: "MY", category: "Shoes", label: "UK 14", measurements: { footLength: { min: 29.9, max: 30.6 } } },
+// ---------- ADULT MEN ----------
+// Source: Uniqlo
+const menShirts: Array<[SystemCode, string, number, number]> = [
+  ["MY", "XS", 78, 84], ["MY", "S", 80, 88], ["MY", "M", 88, 96], ["MY", "L", 96, 104],
+  ["MY", "XL", 104, 112], ["MY", "2XL", 112, 120], ["MY", "3XL", 120, 128], ["MY", "4XL", 128, 136], ["MY", "5XL", 136, 144],
+  ["US", "US XS", 84, 88], ["US", "US S", 88, 92], ["US", "US M", 92, 98], ["US", "US L", 98, 106],
+  ["US", "US XL", 106, 112], ["US", "US 2XL", 112, 120], ["US", "US 3XL", 120, 128], ["US", "US 4XL", 128, 136], ["US", "US 5XL", 136, 144],
+  ["UK", "UK XS", 86, 90], ["UK", "UK S", 90, 94], ["UK", "UK M", 94, 100], ["UK", "UK L", 100, 108],
+  ["UK", "UK XL", 108, 116], ["UK", "UK 2XL", 116, 124], ["UK", "UK 3XL", 124, 132], ["UK", "UK 4XL", 132, 140], ["UK", "UK 5XL", 140, 148],
+  ["EU", "EU 44", 88, 92], ["EU", "EU 46", 92, 96], ["EU", "EU 48", 96, 100], ["EU", "EU 50", 100, 104],
+  ["EU", "EU 52", 104, 110], ["EU", "EU 54", 110, 116], ["EU", "EU 56", 116, 122], ["EU", "EU 58", 122, 128], ["EU", "EU 60", 128, 134],
+  // Adjusted for Vietnam
+  ["VN", "VN XS", 70, 76], ["VN", "VN S", 76, 82], ["VN", "VN M", 82, 86], ["VN", "VN L", 86, 92], ["VN", "VN XL", 92, 98],
+  ["VN", "VN 2XL", 98, 104], ["VN", "VN 3XL", 104, 112], ["VN", "VN 4XL", 112, 120], ["VN", "VN 5XL", 120, 128], ["VN", "VN 6XL", 128, 136], ["VN", "VN 7XL", 136, 144],
+  ["JP", "JP S", 88, 92], ["JP", "JP M", 92, 98], ["JP", "JP L", 98, 104], ["JP", "JP LL", 104, 110],
+  ["JP", "JP 3L", 110, 118], ["JP", "JP 4L", 118, 126], ["JP", "JP 5L", 126, 134], ["JP", "JP 6L", 134, 142], ["JP", "JP 7L", 142, 150],
+  ["CN", "CN S", 86, 90], ["CN", "CN M", 90, 96], ["CN", "CN L", 96, 102], ["CN", "CN XL", 102, 108],
+  ["CN", "CN 2XL", 108, 116], ["CN", "CN 3XL", 116, 124], ["CN", "CN 4XL", 124, 132], ["CN", "CN 5XL", 132, 140], ["CN", "CN 6XL", 140, 148],
+  ["KR", "KR 90", 88, 92], ["KR", "KR 95", 92, 96], ["KR", "KR 100", 96, 100], ["KR", "KR 105", 100, 106],
+  ["KR", "KR 110", 106, 112], ["KR", "KR 115", 112, 118], ["KR", "KR 120", 118, 124], ["KR", "KR 125", 124, 130], ["KR", "KR 130", 130, 136],
 ];
 
-type InternationalSystem = Exclude<SystemCode, "MY">;
-type LabelsBySystem = Record<InternationalSystem, readonly string[]>;
+const menPants: Array<[SystemCode, string, number, number]> = (() => {
+  const rows: Array<[SystemCode, string, number, number]> = [];
+  for (let w = 28; w <= 44; w++) {
+    const b = inch(w);
+    rows.push(["MY", `W${w}`, r1(b - 1.6), r1(b + 1.6)]);
+    rows.push(["US", `US W${w}`, r1(b - 1.5), r1(b + 1.5)]);
+    rows.push(["UK", `UK W${w}`, r1(b + 0.5), r1(b + 3.5)]);
+    rows.push(["VN", `VN ${w}`, r1(b - 1), r1(b + 3)]);
+    rows.push(["KR", `KR ${w}`, r1(b + 0.3), r1(b + 2.7)]);
+  }
+  const euWaist: Array<[number, number, number]> = [
+    [38, 70, 74], [39, 74, 78], [40, 78, 82], [41, 82, 86], [42, 86, 90], [43, 90, 94], [44, 94, 98], [45, 98, 102],
+    [46, 102, 106], [47, 106, 110], [48, 110, 114], [49, 114, 118], [50, 118, 122], [51, 122, 126], [52, 126, 130], [53, 130, 134], [54, 134, 138],
+  ];
+  for (const [eu, mn, mx] of euWaist) rows.push(["EU", `EU ${eu}`, mn, mx]);
+  for (let jp = 73; jp <= 106; jp += 3) rows.push(["JP", `JP ${jp}`, jp - 1.5, jp + 1.5]);
+  for (let cn = 70; cn <= 110; cn += 5) rows.push(["CN", `CN ${cn}`, cn - 2, cn + 2]);
+  return rows;
+})();
 
-const sizeLabels: Record<Category, LabelsBySystem> = {
-  Shirts: {
-    US: ["US XS", "US S", "US M", "US L", "US XL", "US 2XL", "US 3XL", "US 4XL", "US 5XL"],
-    UK: ["UK XS", "UK S", "UK M", "UK L", "UK XL", "UK 2XL", "UK 3XL", "UK 4XL", "UK 5XL"],
-    EU: ["EU 44", "EU 46", "EU 48", "EU 50", "EU 52", "EU 54", "EU 56", "EU 58", "EU 60"],
-    VN: ["VN XS", "VN S", "VN M", "VN L", "VN XL", "VN 2XL", "VN 3XL", "VN 4XL", "VN 5XL"],
-    JP: ["JP XS", "JP S", "JP M", "JP L", "JP LL", "JP 3L", "JP 4L", "JP 5L", "JP 6L"],
-    CN: ["CN XS", "CN S", "CN M", "CN L", "CN XL", "CN 2XL", "CN 3XL", "CN 4XL", "CN 5XL"],
-    KR: ["KR 90", "KR 95", "KR 100", "KR 105", "KR 110", "KR 115", "KR 120", "KR 125", "KR 130"],
-  },
-  Pants: {
-    US: ["US W28", "US W29", "US W30", "US W31", "US W32", "US W33", "US W34", "US W35", "US W36", "US W37", "US W38", "US W39", "US W40", "US W41", "US W42", "US W43", "US W44"],
-    UK: ["UK W28", "UK W29", "UK W30", "UK W31", "UK W32", "UK W33", "UK W34", "UK W35", "UK W36", "UK W37", "UK W38", "UK W39", "UK W40", "UK W41", "UK W42", "UK W43", "UK W44"],
-    EU: ["EU 38", "EU 39", "EU 40", "EU 41", "EU 42", "EU 43", "EU 44", "EU 45", "EU 46", "EU 47", "EU 48", "EU 49", "EU 50", "EU 51", "EU 52", "EU 53", "EU 54"],
-    VN: ["VN W28", "VN W29", "VN W30", "VN W31", "VN W32", "VN W33", "VN W34", "VN W35", "VN W36", "VN W37", "VN W38", "VN W39", "VN W40", "VN W41", "VN W42", "VN W43", "VN W44"],
-    JP: ["JP 73", "JP 75.5", "JP 78", "JP 80.5", "JP 83", "JP 85.5", "JP 88", "JP 90.5", "JP 93", "JP 95.5", "JP 98", "JP 100.5", "JP 103", "JP 105.5", "JP 108", "JP 110.5", "JP 113"],
-    CN: ["CN W28", "CN W29", "CN W30", "CN W31", "CN W32", "CN W33", "CN W34", "CN W35", "CN W36", "CN W37", "CN W38", "CN W39", "CN W40", "CN W41", "CN W42", "CN W43", "CN W44"],
-    KR: ["KR 73", "KR 75.5", "KR 78", "KR 80.5", "KR 83", "KR 85.5", "KR 88", "KR 90.5", "KR 93", "KR 95.5", "KR 98", "KR 100.5", "KR 103", "KR 105.5", "KR 108", "KR 110.5", "KR 113"],
-  },
-  Shoes: {
-    UK: ["UK 6", "UK 6.5", "UK 7", "UK 7.5", "UK 8", "UK 8.5", "UK 9", "UK 9.5", "UK 10", "UK 10.5", "UK 11", "UK 11.5", "UK 12", "UK 12.5", "UK 13", "UK 13.5", "UK 14"],
-    US: ["US 7", "US 7.5", "US 8", "US 8.5", "US 9", "US 9.5", "US 10", "US 10.5", "US 11", "US 11.5", "US 12", "US 12.5", "US 13", "US 13.5", "US 14", "US 14.5", "US 15"],
-    EU: ["EU 40", "EU 40.5", "EU 41", "EU 41.5", "EU 42", "EU 42.5", "EU 43", "EU 43.5", "EU 44", "EU 45", "EU 46", "EU 46.5", "EU 47", "EU 47.5", "EU 48", "EU 48.5", "EU 49"],
-    VN: ["VN 40", "VN 40.5", "VN 41", "VN 41.5", "VN 42", "VN 42.5", "VN 43", "VN 43.5", "VN 44", "VN 45", "VN 46", "VN 46.5", "VN 47", "VN 47.5", "VN 48", "VN 48.5", "VN 49"],
-    JP: ["JP 25", "JP 25.25", "JP 25.5", "JP 25.75", "JP 26", "JP 26.25", "JP 26.5", "JP 27", "JP 27.5", "JP 27.75", "JP 28", "JP 28.5", "JP 29", "JP 29.25", "JP 29.5", "JP 30", "JP 30.5"],
-    CN: ["CN 40", "CN 40.5", "CN 41", "CN 41.5", "CN 42", "CN 42.5", "CN 43", "CN 43.5", "CN 44", "CN 45", "CN 46", "CN 46.5", "CN 47", "CN 47.5", "CN 48", "CN 48.5", "CN 49"],
-    KR: ["KR 250", "KR 252.5", "KR 255", "KR 257.5", "KR 260", "KR 262.5", "KR 265", "KR 270", "KR 275", "KR 277.5", "KR 280", "KR 285", "KR 290", "KR 292.5", "KR 295", "KR 300", "KR 305"],
-  },
-};
-
-const childrenSizeEntries: SizeChartEntry[] = [
-  // Children's clothing charts are approximate; use body measurements as the guide.
-  { system: "MY", category: "Shirts", label: "2Y", measurements: { chest: { min: 54, max: 56 } } },
-  { system: "MY", category: "Shirts", label: "4Y", measurements: { chest: { min: 56, max: 60 } } },
-  { system: "MY", category: "Shirts", label: "6Y", measurements: { chest: { min: 60, max: 64 } } },
-  { system: "MY", category: "Shirts", label: "8Y", measurements: { chest: { min: 64, max: 68 } } },
-  { system: "MY", category: "Shirts", label: "10Y", measurements: { chest: { min: 68, max: 72 } } },
-  { system: "MY", category: "Shirts", label: "12Y", measurements: { chest: { min: 72, max: 76 } } },
-  { system: "MY", category: "Shirts", label: "14Y", measurements: { chest: { min: 76, max: 80 } } },
-  { system: "MY", category: "Pants", label: "2Y", measurements: { waist: { min: 50, max: 52 } } },
-  { system: "MY", category: "Pants", label: "4Y", measurements: { waist: { min: 52, max: 54 } } },
-  { system: "MY", category: "Pants", label: "6Y", measurements: { waist: { min: 54, max: 57 } } },
-  { system: "MY", category: "Pants", label: "8Y", measurements: { waist: { min: 57, max: 60 } } },
-  { system: "MY", category: "Pants", label: "10Y", measurements: { waist: { min: 60, max: 63 } } },
-  { system: "MY", category: "Pants", label: "12Y", measurements: { waist: { min: 63, max: 66 } } },
-  { system: "MY", category: "Pants", label: "14Y", measurements: { waist: { min: 66, max: 70 } } },
-  ...Array.from({ length: 23 }, (_, index) => {
-    const footLength = 12 + index * 0.5;
-    const sizeLabel = Number.isInteger(footLength) ? String(footLength) : footLength.toFixed(1);
-    return {
-      system: "MY" as const,
-      category: "Shoes" as const,
-      label: `${sizeLabel} cm`,
-      measurements: { footLength: { min: footLength - 0.5, max: footLength } },
-    };
+// MY men's shoes follow the UK scale exactly.
+const menShoes: Array<[SystemCode, string, number, number]> = [
+  ["MY", "UK 6", 24.2, 24.8], ["MY", "UK 6.5", 24.5, 25.1], ["MY", "UK 7", 24.8, 25.4], ["MY", "UK 7.5", 25.1, 25.7],
+  ["MY", "UK 8", 25.4, 26.0], ["MY", "UK 8.5", 25.7, 26.3], ["MY", "UK 9", 26.0, 26.6], ["MY", "UK 9.5", 26.3, 26.9],
+  ["MY", "UK 10", 26.6, 27.2], ["MY", "UK 10.5", 26.9, 27.5], ["MY", "UK 11", 27.2, 27.8], ["MY", "UK 11.5", 27.5, 28.1],
+  ["MY", "UK 12", 27.8, 28.4], ["MY", "UK 12.5", 28.1, 28.7], ["MY", "UK 13", 28.4, 29.0], ["MY", "UK 13.5", 28.7, 29.3], ["MY", "UK 14", 29.0, 29.6],
+  ["US", "US 7", 24.5, 25.0], ["US", "US 7.5", 24.8, 25.3], ["US", "US 8", 25.1, 25.6], ["US", "US 8.5", 25.4, 25.9],
+  ["US", "US 9", 25.7, 26.3], ["US", "US 9.5", 26.0, 26.6], ["US", "US 10", 26.3, 26.9], ["US", "US 10.5", 26.6, 27.2],
+  ["US", "US 11", 26.9, 27.5], ["US", "US 11.5", 27.2, 27.8], ["US", "US 12", 27.5, 28.1], ["US", "US 12.5", 27.8, 28.4],
+  ["US", "US 13", 28.1, 28.7], ["US", "US 13.5", 28.4, 29.0], ["US", "US 14", 28.7, 29.3],
+  ["UK", "UK 6", 24.2, 24.8], ["UK", "UK 6.5", 24.5, 25.1], ["UK", "UK 7", 24.8, 25.4], ["UK", "UK 7.5", 25.1, 25.7],
+  ["UK", "UK 8", 25.4, 26.0], ["UK", "UK 8.5", 25.7, 26.3], ["UK", "UK 9", 26.0, 26.6], ["UK", "UK 9.5", 26.3, 26.9],
+  ["UK", "UK 10", 26.6, 27.2], ["UK", "UK 10.5", 26.9, 27.5], ["UK", "UK 11", 27.2, 27.8], ["UK", "UK 11.5", 27.5, 28.1],
+  ["UK", "UK 12", 27.8, 28.4], ["UK", "UK 12.5", 28.1, 28.7], ["UK", "UK 13", 28.4, 29.0], ["UK", "UK 13.5", 28.7, 29.3], ["UK", "UK 14", 29.0, 29.6],
+  ["EU", "EU 39", 24.5, 25.0], ["EU", "EU 40", 24.8, 25.3], ["EU", "EU 41", 25.1, 25.7], ["EU", "EU 42", 25.4, 26.0],
+  ["EU", "EU 43", 25.7, 26.3], ["EU", "EU 44", 26.0, 26.6], ["EU", "EU 45", 26.3, 26.9], ["EU", "EU 46", 26.6, 27.2],
+  ["EU", "EU 47", 26.9, 27.5], ["EU", "EU 48", 27.2, 27.8], ["EU", "EU 49", 27.5, 28.1], ["EU", "EU 50", 27.8, 28.4],
+  ["EU", "EU 51", 28.1, 28.7], ["EU", "EU 52", 28.4, 29.0], ["EU", "EU 53", 28.7, 29.3], ["EU", "EU 54", 29.0, 29.6],
+  ["VN", "VN 38", 24.3, 24.8], ["VN", "VN 39", 24.6, 25.1], ["VN", "VN 40", 24.9, 25.4], ["VN", "VN 41", 25.2, 25.7],
+  ["VN", "VN 42", 25.5, 26.0], ["VN", "VN 43", 25.8, 26.3], ["VN", "VN 44", 26.1, 26.6], ["VN", "VN 45", 26.4, 26.9],
+  ["VN", "VN 46", 26.7, 27.2], ["VN", "VN 47", 27.0, 27.5], ["VN", "VN 48", 27.3, 27.8], ["VN", "VN 49", 27.6, 28.1],
+  ["VN", "VN 50", 27.9, 28.4], ["VN", "VN 51", 28.2, 28.7], ["VN", "VN 52", 28.5, 29.0], ["VN", "VN 53", 28.8, 29.3],
+  ...[24.5, 25, 25.5, 26, 26.5, 27, 27.5, 28, 28.5, 29, 29.5, 30].map((jp): [SystemCode, string, number, number] =>
+    ["JP", `JP ${jp.toFixed(1)}`, r1(jp - 0.3), r1(jp + 0.3)]),
+  ...Array.from({ length: 12 }, (_, i): [SystemCode, string, number, number] => {
+    const mm = 245 + i * 5;
+    return ["CN", `CN ${mm}`, r1(mm / 10 - 0.3), r1(mm / 10 + 0.3)];
+  }),
+  ...Array.from({ length: 12 }, (_, i): [SystemCode, string, number, number] => {
+    const mm = 245 + i * 5;
+    return ["KR", `KR ${mm}`, r1(mm / 10 - 0.25), r1(mm / 10 + 0.25)];
   }),
 ];
 
-const childrenSizeLabels: Record<Category, LabelsBySystem> = {
-  Shirts: {
-    US: ["US 2T", "US 4T", "US 6", "US 8", "US 10", "US 12", "US 14"],
-    UK: ["UK 2-3Y", "UK 4-5Y", "UK 6-7Y", "UK 8-9Y", "UK 10-11Y", "UK 12-13Y", "UK 14Y"],
-    EU: ["EU 92", "EU 104", "EU 116", "EU 128", "EU 140", "EU 152", "EU 164"],
-    VN: ["VN 2Y", "VN 4Y", "VN 6Y", "VN 8Y", "VN 10Y", "VN 12Y", "VN 14Y"],
-    JP: ["JP 90", "JP 100", "JP 110", "JP 120", "JP 130", "JP 150", "JP 160"],
-    CN: ["CN 90", "CN 100", "CN 110", "CN 120", "CN 130", "CN 150", "CN 160"],
-    KR: ["KR 90", "KR 100", "KR 110", "KR 120", "KR 130", "KR 150", "KR 160"],
-  },
-  Pants: {
-    US: ["US 2T", "US 4T", "US 6", "US 8", "US 10", "US 12", "US 14"],
-    UK: ["UK 2-3Y", "UK 4-5Y", "UK 6-7Y", "UK 8-9Y", "UK 10-11Y", "UK 12-13Y", "UK 14Y"],
-    EU: ["EU 92", "EU 104", "EU 116", "EU 128", "EU 140", "EU 152", "EU 164"],
-    VN: ["VN 2Y", "VN 4Y", "VN 6Y", "VN 8Y", "VN 10Y", "VN 12Y", "VN 14Y"],
-    JP: ["JP 90", "JP 100", "JP 110", "JP 120", "JP 130", "JP 150", "JP 160"],
-    CN: ["CN 90", "CN 100", "CN 110", "CN 120", "CN 130", "CN 150", "CN 160"],
-    KR: ["KR 90", "KR 100", "KR 110", "KR 120", "KR 130", "KR 150", "KR 160"],
-  },
-  Shoes: {
-    US: ["US 5C", "US 5.5C", "US 6C", "US 6.5C", "US 7C", "US 7.5C", "US 8C", "US 8.5C", "US 9C", "US 9.5C", "US 10C", "US 10.5C", "US 11C", "US 11.5C", "US 12C", "US 12.5C", "US 13C", "US 13.5C", "US 1Y", "US 1.5Y", "US 2Y", "US 2.5Y", "US 3Y"],
-    UK: ["UK 4C", "UK 4.5C", "UK 5C", "UK 5.5C", "UK 6C", "UK 6.5C", "UK 7C", "UK 7.5C", "UK 8C", "UK 8.5C", "UK 9C", "UK 9.5C", "UK 10C", "UK 10.5C", "UK 11C", "UK 11.5C", "UK 12C", "UK 12.5C", "UK 13C", "UK 13.5C", "UK 1", "UK 1.5", "UK 2"],
-    EU: ["EU 21", "EU 21.5", "EU 22", "EU 22.5", "EU 23", "EU 23.5", "EU 24", "EU 24.5", "EU 25", "EU 25.5", "EU 26", "EU 26.5", "EU 27", "EU 27.5", "EU 28", "EU 28.5", "EU 29", "EU 29.5", "EU 30", "EU 30.5", "EU 31", "EU 31.5", "EU 32"],
-    VN: ["VN 21", "VN 21.5", "VN 22", "VN 22.5", "VN 23", "VN 23.5", "VN 24", "VN 24.5", "VN 25", "VN 25.5", "VN 26", "VN 26.5", "VN 27", "VN 27.5", "VN 28", "VN 28.5", "VN 29", "VN 29.5", "VN 30", "VN 30.5", "VN 31", "VN 31.5", "VN 32"],
-    JP: ["JP 12", "JP 12.5", "JP 13", "JP 13.5", "JP 14", "JP 14.5", "JP 15", "JP 15.5", "JP 16", "JP 16.5", "JP 17", "JP 17.5", "JP 18", "JP 18.5", "JP 19", "JP 19.5", "JP 20", "JP 20.5", "JP 21", "JP 21.5", "JP 22", "JP 22.5", "JP 23"],
-    CN: ["CN 21", "CN 21.5", "CN 22", "CN 22.5", "CN 23", "CN 23.5", "CN 24", "CN 24.5", "CN 25", "CN 25.5", "CN 26", "CN 26.5", "CN 27", "CN 27.5", "CN 28", "CN 28.5", "CN 29", "CN 29.5", "CN 30", "CN 30.5", "CN 31", "CN 31.5", "CN 32"],
-    KR: ["KR 120", "KR 125", "KR 130", "KR 135", "KR 140", "KR 145", "KR 150", "KR 155", "KR 160", "KR 165", "KR 170", "KR 175", "KR 180", "KR 185", "KR 190", "KR 195", "KR 200", "KR 205", "KR 210", "KR 215", "KR 220", "KR 225", "KR 230"],
-  },
+// ---------- ADULT WOMEN ----------
+const womenShirts: Array<[SystemCode, string, Category, number, number, string?]> = (() => {
+  const rows: Array<[SystemCode, string, Category, number, number, string?]> = [];
+  const usBust: Array<[number, number]> = [[2, 82.5], [4, 85], [6, 87.5], [8, 90], [10, 92.5], [12, 96.5], [14, 100.5], [16, 104], [18, 109], [20, 114]];
+  for (const [n, c] of usBust) {
+    rows.push(["US", `US ${n}`, "Shirts", c - 2, c + 2]);
+    rows.push(["UK", `UK ${n + 4}`, "Shirts", c - 2, c + 2]);
+    rows.push(["EU", `EU ${n + 32}`, "Shirts", c - 2, c + 2]);
+    rows.push(["JP", `JP ${n + 3}`, "Shirts", c - 2, c + 2]);
+  }
+  const letters: Array<[string, number, number]> = [
+    ["XS", 80, 84], ["S", 84, 88], ["M", 88, 93], ["L", 93, 99], ["XL", 99, 105], ["2XL", 105, 113], ["3XL", 113, 121], ["4XL", 121, 129],
+  ];
+  for (const [lab, mn, mx] of letters) {
+    rows.push(["MY", lab, "Shirts", mn, mx]);
+    rows.push(["VN", `VN ${lab}`, "Shirts", mn, mx]);
+  }
+  const cn: Array<[string, number, number]> = [
+    ["155/80A", 80, 84], ["160/84A", 84, 88], ["165/88A", 88, 92], ["170/92A", 92, 96.5],
+    ["175/96A", 96.5, 101], ["175/100A", 101, 106.5], ["180/104A", 106.5, 112], ["180/110A", 112, 118],
+  ];
+  for (const [lab, mn, mx] of cn) rows.push(["CN", `CN ${lab}`, "Shirts", mn, mx]);
+  const kr: Array<[string, number, number]> = [["44", 78, 82], ["55", 83, 87], ["66", 87, 93], ["77", 93, 100], ["88", 100, 108], ["99", 108, 116]];
+  for (const [lab, mn, mx] of kr) rows.push(["KR", `KR ${lab}`, "Shirts", mn, mx]);
+  return rows;
+})();
+
+const womenPants: Array<[SystemCode, string, Category, number, number, string?]> = (() => {
+  const rows: Array<[SystemCode, string, Category, number, number, string?]> = [];
+  const usWaist: Array<[number, number]> = [[2, 61], [4, 63.5], [6, 66], [8, 68.5], [10, 71], [12, 75], [14, 79], [16, 82.5], [18, 87.5], [20, 93]];
+  for (const [n, w] of usWaist) {
+    rows.push(["US", `US ${n}`, "Pants", w - 1.5, w + 1.5]);
+    rows.push(["UK", `UK ${n + 4}`, "Pants", w - 1.5, w + 1.5]);
+    rows.push(["EU", `EU ${n + 32}`, "Pants", w - 1.5, w + 1.5]);
+    rows.push(["JP", `JP ${n + 3}`, "Pants", w - 1.5, w + 1.5]);
+  }
+  const letters: Array<[string, number, number]> = [
+    ["XS", 58, 62], ["S", 62, 66], ["M", 66, 71], ["L", 71, 77], ["XL", 77, 83], ["2XL", 83, 91], ["3XL", 91, 99], ["4XL", 99, 107],
+  ];
+  for (const [lab, mn, mx] of letters) {
+    rows.push(["MY", lab, "Pants", mn, mx]);
+    rows.push(["VN", `VN ${lab}`, "Pants", mn, mx]);
+  }
+  for (let i = 24; i <= 36; i += 2) {
+    const b = inch(i);
+    rows.push(["CN", `CN ${i}`, "Pants", r1(b - 1.5), r1(b + 1.5)]);
+  }
+  for (let i = 24; i <= 34; i += 2) {
+    const b = inch(i);
+    rows.push(["KR", `KR ${i}`, "Pants", r1(b - 1), r1(b + 2)]);
+  }
+  return rows;
+})();
+
+// (foot cm, US, UK, EU, JP) — women's shoe anchors
+const womenShoeAnchors: Array<[number, string, string, string, string]> = [
+  [21.8, "5", "2.5", "35", "21"], [22.5, "6", "3.5", "36", "22"], [23.2, "6.5", "4", "37", "22.5"], [23.5, "7", "4.5", "37.5", "23"],
+  [23.8, "7.5", "5", "38", "23.5"], [24.2, "8", "5.5", "38.5", "24"], [24.5, "8.5", "6", "39", "24.5"],
+  [25.2, "9", "6.5", "40", "25"], [25.8, "9.5", "7", "41", "25.5"], [26.5, "10", "7.5", "42", "26"],
+];
+
+const womenShoes: Array<[SystemCode, string, number, number]> = [
+  ["MY", "UK 3", 21.9, 22.4], ["MY", "UK 3.5", 22.2, 22.7], ["MY", "UK 4", 22.9, 23.5], ["MY", "UK 4.5", 23.2, 23.8],
+  ["MY", "UK 5", 23.5, 24.1], ["MY", "UK 5.5", 23.9, 24.5], ["MY", "UK 6", 24.2, 24.8], ["MY", "UK 6.5", 24.9, 25.5],
+  ["MY", "UK 7", 25.5, 26.1], ["MY", "UK 7.5", 26.2, 26.8], ["MY", "UK 8", 26.3, 26.9],
+  ...womenShoeAnchors.flatMap(([f, us, uk, eu, jp]): Array<[SystemCode, string, number, number]> => [
+    ["US", `US ${us}`, r1(f - 0.3), r1(f + 0.3)],
+    ["UK", `UK ${uk}`, r1(f - 0.3), r1(f + 0.3)],
+    ["EU", `EU ${eu}`, r1(f - 0.3), r1(f + 0.3)],
+    ["VN", `VN ${eu}`, r1(f - 0.3), r1(f + 0.3)],
+    ["JP", `JP ${jp}`, r1(f - 0.3), r1(f + 0.3)],
+    ["CN", `CN ${Math.round(f * 10)}`, r1(f - 0.3), r1(f + 0.3)],
+    ["KR", `KR ${Math.round(f * 10)}`, r1(f - 0.25), r1(f + 0.25)],
+  ]),
+];
+
+// ---------- CHILDREN ----------
+// Canonical age ladder: chest/waist (cm), height approximations per system.
+const kidLadder: Array<[string, number, number, number, number]> = [
+  ["2Y", 52, 54, 50, 52], ["3Y", 54, 56, 51.5, 53], ["4Y", 56, 58, 53, 54.5], ["5Y", 58, 61, 54.5, 56.5],
+  ["6Y", 61, 64, 56.5, 58.5], ["7Y", 64, 66, 58.5, 60], ["8Y", 66, 69, 60, 61.5], ["9Y", 69, 71, 61.5, 63],
+  ["10Y", 71, 74, 63, 65], ["11Y", 74, 76, 65, 66.5], ["12Y", 76, 79, 66.5, 68], ["14Y", 79, 82, 68, 70], ["16Y", 82, 85, 70, 72],
+];
+const kidHeight: Record<string, number> = {
+  "2Y": 92, "3Y": 98, "4Y": 104, "5Y": 110, "6Y": 116, "7Y": 122, "8Y": 128, "9Y": 134, "10Y": 140, "11Y": 146, "12Y": 152, "14Y": 158, "16Y": 164,
+};
+const kidMaps: Partial<Record<SystemCode, Record<string, string>>> = {
+  US: { "2Y": "2T", "3Y": "3T", "4Y": "4T", "5Y": "5", "6Y": "6", "7Y": "6X-7", "8Y": "8", "10Y": "10", "12Y": "12", "14Y": "14", "16Y": "16" },
+  UK: { "3Y": "2-3", "4Y": "3-4", "5Y": "4-5", "6Y": "5-6", "7Y": "6-7", "8Y": "7-8", "10Y": "9-10", "12Y": "11-12", "14Y": "13-14", "16Y": "15-16" },
+  EU: { "2Y": "92", "3Y": "98", "4Y": "104", "5Y": "110", "6Y": "116", "7Y": "122", "8Y": "128", "9Y": "134", "10Y": "140", "11Y": "146", "12Y": "152", "14Y": "158", "16Y": "164" },
+  JP: { "2Y": "90", "4Y": "100", "5Y": "110", "7Y": "120", "9Y": "130", "11Y": "140", "14Y": "150", "16Y": "160" },
+  CN: { "2Y": "90", "4Y": "100", "5Y": "110", "7Y": "120", "9Y": "130", "11Y": "140", "14Y": "150", "16Y": "160" },
+  KR: { "3Y": "3", "5Y": "5", "7Y": "7", "9Y": "9", "11Y": "11", "12Y": "13", "14Y": "15", "16Y": "17" },
 };
 
-function createInternationalEntries(
-  category: Category,
-  sourceEntries: SizeChartEntry[],
-  labelsBySystem: Record<Category, LabelsBySystem>,
-  audience: SizeAudience,
+const kidClothes: Array<[SystemCode, string, Category, number, number, string?]> = [];
+for (const [age, cmn, cmx, wmn, wmx] of kidLadder) {
+  kidClothes.push(["MY", age, "Shirts", cmn, cmx, `approx height ${kidHeight[age]} cm`]);
+  kidClothes.push(["MY", age, "Pants", wmn, wmx]);
+  kidClothes.push(["VN", `VN ${age}`, "Shirts", cmn, cmx]);
+  kidClothes.push(["VN", `VN ${age}`, "Pants", wmn, wmx]);
+}
+for (const [system, map] of Object.entries(kidMaps) as Array<[SystemCode, Record<string, string>]>) {
+  for (const [age, label] of Object.entries(map)) {
+    const row = kidLadder.find(([a]) => a === age)!;
+    kidClothes.push([system, `${system} ${label}`, "Shirts", row[1], row[2]]);
+    kidClothes.push([system, `${system} ${label}`, "Pants", row[3], row[4]]);
+  }
+}
+
+// (foot cm, US, UK, EU)
+const kidShoeAnchors: Array<[number, string, string, string]> = [
+  [12.1, "5C", "4", "20"], [13.0, "6C", "5", "22"], [14.0, "7C", "6", "23"], [14.6, "8C", "7", "24"], [15.6, "9C", "8", "25"],
+  [16.5, "10C", "9", "27"], [17.1, "11C", "10", "28"], [18.1, "12C", "11", "30"], [19.1, "13C", "12", "31"],
+  [19.7, "1Y", "13", "32"], [20.6, "2Y", "1", "33.5"], [21.6, "3Y", "2", "34.5"], [22.2, "4Y", "3", "36"],
+  [23.2, "5Y", "4", "37"], [24.1, "6Y", "5", "38"], [24.8, "7Y", "6", "39"],
+];
+const kidShoes: Array<[SystemCode, string, number, number]> = [
+  ...Array.from({ length: 28 }, (_, i): [SystemCode, string, number, number] => {
+    const f = 11.5 + i * 0.5;
+    return ["MY", `${f.toFixed(1)} cm`, r1(f - 0.25), r1(f + 0.25)];
+  }),
+  ...kidShoeAnchors.flatMap(([f, us, uk, eu]): Array<[SystemCode, string, number, number]> => [
+    ["US", `US ${us}`, r1(f - 0.3), r1(f + 0.3)],
+    ["UK", `UK ${uk}`, r1(f - 0.3), r1(f + 0.3)],
+    ["EU", `EU ${eu}`, r1(f - 0.3), r1(f + 0.3)],
+    ["VN", `VN ${eu}`, r1(f - 0.3), r1(f + 0.3)],
+    ["CN", `CN ${eu}`, r1(f - 0.3), r1(f + 0.3)],
+    ["JP", `JP ${f.toFixed(1)}`, r1(f - 0.3), r1(f + 0.3)],
+    ["KR", `KR ${Math.round(f * 10)}`, r1(f - 0.25), r1(f + 0.25)],
+  ]),
+];
+
+// ---------- ASSEMBLY ----------
+function build(
+  rows: Array<[SystemCode, string, Category, number, number, string?]>,
+  gender: SizeGender,
 ): SizeChartEntry[] {
-  const categoryEntries = sourceEntries.filter(entry => entry.category === category);
-
-  return (Object.keys(labelsBySystem[category]) as InternationalSystem[]).flatMap(system => {
-    const labels = labelsBySystem[category][system];
-
-    if (labels.length !== categoryEntries.length) {
-      throw new Error(
-        `Expected ${categoryEntries.length} ${category} labels for ${system}, received ${labels.length}.`,
-      );
-    }
-
-    return categoryEntries.map((entry, index) => {
-      const label = labels[index];
-      if (!label) {
-        throw new Error(`Missing ${system} ${category} size label at index ${index}.`);
-      }
-
-      return {
-        ...entry,
-        audience,
-        system,
-        label,
-      };
-    });
-  });
+  return rows.map(([system, label, category, min, max, notes]) => ({
+    system,
+    category,
+    label,
+    audience: "Adults" as const,
+    gender,
+    notes,
+    measurements: category === "Shoes"
+      ? { footLength: { min, max } }
+      : category === "Shirts"
+        ? { chest: { min, max } }
+        : { waist: { min, max } },
+  }));
 }
 
 export const sizeChartEntries: SizeChartEntry[] = [
-  ...malaysiaSizeEntries.map(entry => ({ ...entry, audience: "Adults" as const })),
-  ...childrenSizeEntries.map(entry => ({ ...entry, audience: "Children" as const })),
-  ...(["Shirts", "Pants", "Shoes"] as const).flatMap(category =>
-    createInternationalEntries(category, malaysiaSizeEntries, sizeLabels, "Adults"),
-  ),
-  ...(["Shirts", "Pants", "Shoes"] as const).flatMap(category =>
-    createInternationalEntries(category, childrenSizeEntries, childrenSizeLabels, "Children"),
-  ),
+  ...build(menShirts.map(([s, l, mn, mx]) => [s, l, "Shirts", mn, mx] as [SystemCode, string, Category, number, number]), "Men"),
+  ...build(menPants.map(([s, l, mn, mx]) => [s, l, "Pants", mn, mx] as [SystemCode, string, Category, number, number]), "Men"),
+  ...build(menShoes.map(([s, l, mn, mx]) => [s, l, "Shoes", mn, mx] as [SystemCode, string, Category, number, number]), "Men"),
+  ...build(womenShirts, "Women"),
+  ...build(womenPants, "Women"),
+  ...build(womenShoes.map(([s, l, mn, mx]) => [s, l, "Shoes", mn, mx] as [SystemCode, string, Category, number, number]), "Women"),
+  ...kidClothes.map(([system, label, category, min, max, notes]) => ({
+    system,
+    category,
+    label,
+    audience: "Children" as const,
+    notes,
+    measurements: category === "Shirts"
+      ? { chest: { min, max } }
+      : { waist: { min, max } },
+  })),
+  ...kidShoes.map(([system, label, min, max]) => ({
+    system,
+    category: "Shoes" as const,
+    label,
+    audience: "Children" as const,
+    measurements: { footLength: { min, max } },
+  })),
 ];

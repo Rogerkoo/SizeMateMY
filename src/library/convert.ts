@@ -12,11 +12,7 @@ const confidenceRank: Record<Confidence, number> = {
 function overlap(aMin: number, aMax: number, bMin: number, bMax: number) {
   const start = Math.max(aMin, bMin);
   const end = Math.min(aMax, bMax);
-
-  if (end < start) {
-    return 0;
-  }
-
+  if (end < start) return 0;
   return end - start;
 }
 
@@ -24,6 +20,15 @@ export function measurementKeyForCategory(category: Category): keyof SizeChartEn
   if (category === "Shoes") return "footLength";
   if (category === "Shirts") return "chest";
   return "waist";
+}
+
+function sameGroup(entry: SizeChartEntry, input: SizeChartEntry): boolean {
+  const entryAudience = entry.audience ?? "Adults";
+  const inputAudience = input.audience ?? "Adults";
+  if (entryAudience !== inputAudience) return false;
+  // Children entries have no gender; adults are split Men / Women.
+  if (inputAudience === "Children") return true;
+  return (entry.gender ?? "Men") === (input.gender ?? "Men");
 }
 
 export function convertSize(entries: SizeChartEntry[], input: SizeChartEntry): ConversionResult {
@@ -39,15 +44,12 @@ export function convertSize(entries: SizeChartEntry[], input: SizeChartEntry): C
     .filter(
       entry =>
         entry.category === category &&
-        (entry.audience ?? "Adults") === (input.audience ?? "Adults") &&
-        entry.system !== input.system,
+        entry.system !== input.system &&
+        sameGroup(entry, input),
     )
     .flatMap((entry) => {
       const candidateRange = entry.measurements[key];
-
-      if (!candidateRange) {
-        return [];
-      }
+      if (!candidateRange) return [];
 
       const overlapAmount = overlap(inputRange.min, inputRange.max, candidateRange.min, candidateRange.max);
       const inputLength = inputRange.max - inputRange.min;
@@ -66,10 +68,7 @@ export function convertSize(entries: SizeChartEntry[], input: SizeChartEntry): C
   return {
     input: { system: input.system, label: input.label },
     matches,
-    primaryMeasurement: {
-      name: String(key),
-      range: inputRange,
-    },
+    primaryMeasurement: { name: String(key), range: inputRange },
   };
 }
 
@@ -79,17 +78,9 @@ export function bestMatchPerSystem(result: ConversionResult): Array<{
   confidence: "High" | "Medium" | "Low";
 }> {
   const best = new Map<SystemCode, { label: string; confidence: "High" | "Medium" | "Low" }>();
-
   for (const m of result.matches) {
-    const existing = best.get(m.system);
-    if (!existing) {
-      best.set(m.system, { label: m.label, confidence: m.confidence });
-      continue;
-    }
-
-    // keep the first (already sorted best-first). If you ever change sorting, you can compare here.
+    if (!best.has(m.system)) best.set(m.system, { label: m.label, confidence: m.confidence });
   }
-
   return Array.from(best.entries()).map(([system, v]) => ({ system, ...v }));
 }
 
@@ -98,12 +89,10 @@ export function matchesBySystem(result: ConversionResult): Array<{
   matches: Array<{ label: string; confidence: "High" | "Medium" | "Low"; reason: string }>;
 }> {
   const map = new Map<SystemCode, Array<{ label: string; confidence: "High" | "Medium" | "Low"; reason: string }>>();
-
   for (const m of result.matches) {
     const arr = map.get(m.system) ?? [];
     arr.push({ label: m.label, confidence: m.confidence, reason: m.reason });
     map.set(m.system, arr);
   }
-
   return Array.from(map.entries()).map(([system, matches]) => ({ system, matches }));
 }
